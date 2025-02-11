@@ -1,0 +1,25 @@
+services:
+  jaeger:
+    hostname: "jaeger"
+    image: jaegertracing/jaeger:2.3.0
+    ports:
+      - 16686:16686
+      - 4317:4317
+      - 4318:4318
+    expose:
+      - 16686:16686
+      - 4317:4317
+      - 4318:4318
+    volumes:
+      - ./core-tools/observability/jaeger/config.yml:/config.yml
+      - ./core-tools/observability/jaeger/config-ui.json:/cmd/jaeger/config-ui.json
+    command:
+      - --config=file:/config.yml
+
+  prometheus:
+    hostname: "prometheus"
+    image: prom/prometheus:latest
+    expose:
+      - 9090:9090
+    volumes:
+      - ./core-tools/observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml

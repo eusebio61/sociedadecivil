@@ -1,32 +1,15 @@
 import requests
+from sociedadecivil.base import config, tracing
 
-from opentelemetry import trace
-from opentelemetry.trace import Status, StatusCode
-from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import (
-    BatchSpanProcessor,
-    ConsoleSpanExporter,
-)
-
-provider = TracerProvider()
-processor = BatchSpanProcessor(ConsoleSpanExporter())
-provider.add_span_processor(processor)
-
-# Sets the global default tracer provider
-trace.set_tracer_provider(provider)
-
-# Creates a tracer from the global tracer provider
-tracer = trace.get_tracer(__name__)
-
-platform_name = 'eusebio'
+tracer = tracing.get_tracer(__name__)
 
 def convert_date(date):
     import time
     return time.strftime('%Y-%m-%d', time.strptime(date, '%d-%m-%Y'))
 
-with tracer.start_as_current_span("contract-list") as span:
+with tracer.start_span("contract-list") as root_span:
 
-    with tracer.start_as_current_span("fetch") as span:
+    with tracer.start_span("fetch") as span:
 
         span.add_event("Requesting contracts list", {"verbosity_level": "debug"})
 
@@ -40,28 +23,24 @@ with tracer.start_as_current_span("contract-list") as span:
                 "size": 25
             },
             headers={
-                'User-Agent': f'Mozilla/5.0 ({platform_name})'
+                'User-Agent': f'Mozilla/5.0 ({config.platform_name})'
             }
         )
         
-        span.add_event("Request fulfilled", {"verbosity_level": "error"})
+        span.add_event("Request fulfilled", {"verbosity_level": "debug"})
 
         if search_response.ok:
             try:
                 search_results = search_response.json()
             except Exception as ex:
-                span.set_status(Status(StatusCode.ERROR))
-                span.add_event("Got a response but the expected Json is unparsable", {"verbosity_level": "error"})
-                span.record_exception(ex)
+                tracing.error("Got a response but the expected Json is unparsable", ex)
                 raise ex
         else:
-            span.set_status(Status(StatusCode.ERROR))
-            span.add_event(f"Unable to retrieve a valid response from server: {search_response.status_code}", {"verbosity_level": "error"})
             ex = Exception(f'HTTP Error: {search_response.status_code}')
-            span.record_exception(ex)
+            tracing.error(f"Unable to retrieve a valid response from server: {search_response.status_code}", ex)
             raise ex
 
-    with tracer.start_as_current_span("persist") as span:
+    with tracer.start_span("persist") as span:
 
         import duckdb
         db = duckdb.connect('contracts_raw.db')
