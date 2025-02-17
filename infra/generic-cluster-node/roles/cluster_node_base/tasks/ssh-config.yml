@@ -1,0 +1,12 @@
+---
+- name: Set authorized key for user root
+  ansible.posix.authorized_key:
+    user: root
+    state: present
+    key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCxeOpNfLW56yFkrlhrc/N8fDj77QaOqAmbNLBOvOHFW20jMwp/GqLUbDPWVPcQk9poG4eg0XWWNPu4C4VYaWDgmoshZL68TtHZLCGbtlm6VBE3So+Pxs2CzKEC82R2bTMA+drrW5sMBuzDwssO4jgW3WdyAmnl3XjirIWuzst6Yb4vG75jxDHe7UlWrc6+p4siB1e8j5o/Hb08CbjcaHrDI3QGcM5ReOUYRhTaTIS2Dvc9gIXUbVYutOO/J4sVpbQOCssE0fjUE/SvulHulfHmjvt9XWn8rMobEbRSKR48sJZ1fOmbi6u7O1NCybuW5y3KJUcHvX42u0VebYxQcPjZmf85H7jfb8jAK98VYta5BRycubZY/Kn+kisISkXbMWHkygQnbLp68g0QQ64g9m8Vfk0PXrFpCGY0buP1ds7zEruNYEJfDfHDd9AMWk4HrMfxhpvyvx4m++6AdbZAj/IhOtPbIcmmeS6wB9NaFAp/eWRU02NreAa//NWAj36ETps= eusebio"
+
+- name: Set authorized key for user sysadmin
+  ansible.posix.authorized_key:
+    user: sysadmin
+    state: present
+    key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCxeOpNfLW56yFkrlhrc/N8fDj77QaOqAmbNLBOvOHFW20jMwp/GqLUbDPWVPcQk9poG4eg0XWWNPu4C4VYaWDgmoshZL68TtHZLCGbtlm6VBE3So+Pxs2CzKEC82R2bTMA+drrW5sMBuzDwssO4jgW3WdyAmnl3XjirIWuzst6Yb4vG75jxDHe7UlWrc6+p4siB1e8j5o/Hb08CbjcaHrDI3QGcM5ReOUYRhTaTIS2Dvc9gIXUbVYutOO/J4sVpbQOCssE0fjUE/SvulHulfHmjvt9XWn8rMobEbRSKR48sJZ1fOmbi6u7O1NCybuW5y3KJUcHvX42u0VebYxQcPjZmf85H7jfb8jAK98VYta5BRycubZY/Kn+kisISkXbMWHkygQnbLp68g0QQ64g9m8Vfk0PXrFpCGY0buP1ds7zEruNYEJfDfHDd9AMWk4HrMfxhpvyvx4m++6AdbZAj/IhOtPbIcmmeS6wB9NaFAp/eWRU02NreAa//NWAj36ETps= eusebio"

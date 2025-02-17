@@ -1,0 +1,68 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+
+  # Check required packages
+  - stat:
+      path: /usr/bin/docker
+    register: docker_bin
+
+  - name: Assert docker binary file exists
+    assert:
+      that: docker_bin.stat.exists
+      msg: "Docker is installed after playbook runs"
+
+  # Check user creation
+  - ansible.builtin.command: "getent passwd sysadmin"
+    register: user_exists
+
+  - name: Display user info
+    debug:
+      msg: "user info: {{ user_exists.stdout }}"
+
+  - name: Assert sysadmin user created
+    assert:
+      that: user_exists.rc == 0
+      msg: "User sysadmin is present"
+
+  # Check user groups
+  - ansible.builtin.command: "id -Gn sysadmin"
+    register: user_groups
+    failed_when: user_groups.rc != 0
+
+  - name: Display user groups
+    debug:
+      msg: "user groups: {{ user_groups.stdout }}"
+
+  - name: Ensure user is in expected groups
+    assert:
+      that: "'wheel' in user_groups.stdout.split()"
+      msg: "User sysadmin is in the 'wheel' group"
+  
+  - name: Ensure user is in expected groups
+    assert:
+      that: "'docker' in user_groups.stdout.split()"
+      msg: "User sysadmin is in the 'docker' group"
+
+  # Check ssh config
+  - ansible.builtin.command: "grep -c eusebio /root/.ssh/authorized_keys"
+    register: ssh_authorized_key_status
+    failed_when: ssh_authorized_key_status.rc != 0
+
+  - name: Ensure authorized key for root is set
+    assert:
+      that: ssh_authorized_key_status.stdout == "1"
+      msg: "Authorized key set for user root"
+
+  - ansible.builtin.command: "grep -c eusebio /home/sysadmin/.ssh/authorized_keys"
+    register: ssh_authorized_key_status
+    failed_when: ssh_authorized_key_status.rc != 0
+
+  - name: Ensure authorized key for eusebio is set
+    assert:
+      that: ssh_authorized_key_status.stdout == "1"
+      msg: "Authorized key set for user eusebio"

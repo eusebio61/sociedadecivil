@@ -1,0 +1,13 @@
+---
+
+# Install the essential required packages
+- include_tasks:
+    file: base-packages.yml
+
+# Create the relevant users
+- include_tasks:
+    file: users.yml
+
+# Load authorized keys and other ssh configs
+- include_tasks:
+    file: ssh-config.yml

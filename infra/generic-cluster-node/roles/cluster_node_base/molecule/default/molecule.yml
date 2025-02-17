@@ -1,0 +1,14 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: archlinux
+    image: docker.sociedadecivil.local/ansible/molecule/archlinux:base
+    pre_build_image: true
+    dockerfile: instances/archlinux.Dockerfile
+provisioner:
+  name: ansible
+verifier:
+  name: ansible

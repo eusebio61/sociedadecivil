@@ -1,0 +1,10 @@
+---
+- name: Install sudo
+  community.general.pacman:
+    name: sudo
+    state: present
+
+- name: Install docker
+  community.general.pacman:
+    name: docker
+    state: present
