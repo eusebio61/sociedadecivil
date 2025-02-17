@@ -1,0 +1,8 @@
+galaxy_info:
+  author: Eusebio
+  namespace: sociedadecivil
+  description: Setup a K3s using the specified inventory
+  company: sociedadecivil
+  min_ansible_version: 2.1
+  galaxy_tags: []
+dependencies: []

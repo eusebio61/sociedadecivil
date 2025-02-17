@@ -14,5 +14,3 @@ provisioner:
     name: ansible-lint
 verifier:
   name: ansible
-  options:
-    s: true
