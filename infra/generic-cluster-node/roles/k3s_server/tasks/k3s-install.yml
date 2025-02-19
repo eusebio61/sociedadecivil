@@ -1,0 +1,26 @@
+---
+- name: Move the k3s service file to the systemd services directory
+  ansible.builtin.copy:
+    src: files/k3s.service
+    dest: /usr/lib/systemd/system/k3s.service
+  become: true
+  become_method: sudo
+
+- name: Move the k3s service environment configuration to the server
+  ansible.builtin.copy:
+    src: files/k3s.service.env
+    dest: /etc/systemd/system/k3s.service.env
+  become: true
+  become_method: sudo
+
+- name: Start the server service
+  ansible.builtin.systemd_service:
+    state: enabled
+    daemon_reload: true
+    name: k3s
+
+- name: Start the server service
+  ansible.builtin.systemd_service:
+    state: restarted
+    daemon_reload: true
+    name: k3s
