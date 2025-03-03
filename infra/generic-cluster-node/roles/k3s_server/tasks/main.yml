@@ -1,5 +1,0 @@
----
-
-# Install the essential required packages
-- include_tasks:
-    file: k3s-install.yml

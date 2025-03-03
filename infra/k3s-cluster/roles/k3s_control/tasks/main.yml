@@ -1,0 +1,35 @@
+---
+- name: Ensure dependencies are installed
+  community.general.pacman:
+    name: ["curl", "iptables", "socat"]
+    state: present
+
+# Control installation
+- name: Install k3s server
+  ansible.builtin.shell: curl -sfL https://get.k3s.io | sh -s - --write-kubeconfig-mode 644 {{ k3s_server_args }}
+  args:
+    creates: /usr/local/bin/k3s
+  become: true
+
+- name: Ensure k3s service is running
+  systemd:
+    name: k3s
+    state: started
+    enabled: yes
+
+- name: Wait for k3s server to be ready
+  shell: kubectl get nodes -l node-role.kubernetes.io/control-plane=true | tail -n+2 | wc -l
+  register: result
+  until: result.rc == 0 and result.stdout == "1"
+  retries: 30
+  delay: 10
+  changed_when: False
+
+- name: Get k3s token
+  slurp:
+    src: /var/lib/rancher/k3s/server/agent-token
+  register: k3s_token_file
+
+- name: Set k3s_token fact
+  set_fact:
+    k3s_token: "{{ k3s_token_file['content'] | b64decode | trim }}"

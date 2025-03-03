@@ -1,0 +1,162 @@
+## **1. Executive Summary**  
+This business plan outlines the development and sustainability of a crowdsourced, data-driven platform designed to combat misinformation, enhance political transparency, and provide a **reliable source of information and discussion**. The platform will enable **citizens, journalists, and policymakers** to access and analyze public datasets, contributing to a more informed democratic process. The project will start in **Portugal**, with expansion planned to **France and Germany**, ultimately scaling to the **European Union level**. The platform will be **fully independent** while leveraging **EU funding** for development and access to public datasets.
+
+## **2. Mission and Vision**  
+### **Mission**  
+To create a **neutral, verifiable, and collaborative** platform that empowers the public with **fact-checked, data-driven insights**, enabling better democratic participation and policy evaluation.  
+
+### **Vision**  
+To establish the **most trusted and accessible political and civic information platform** in Europe, fostering a culture of transparency, accountability, and informed decision-making.
+
+## **3. Market Analysis**  
+### **Problem Statement**  
+- Political misinformation and biased narratives distort public opinion.  
+- Lack of centralized, neutral, and fact-checked repositories of public data.  
+- Media and policymakers struggle to access **structured, unbiased public sentiment**.  
+
+### **Target Audience**  
+- **General Public** – Access to fact-checked reports and data.  
+- **Journalists & Media** – Real-time analytics and verified information.  
+- **Researchers & Academics** – Open access to structured datasets.  
+- **Policymakers & Governments** – Public opinion tracking for decision-making.  
+
+### **Competitive Landscape**  
+- Traditional fact-checking organizations (e.g., FactCheckEU) lack transparency and crowdsourced validation.
+- Existing open data platforms (e.g., Open Data Portal) lack **user-friendly analysis tools**.
+- Social media platforms amplify misinformation rather than counteracting it.
+
+## **4. Product and Technology**  
+### **Core Features**  
+1. **Open-Source, Decentralized Fact-Checking** – A **merge-request style** review system for reports.  
+2. **Geospatial Data Analysis & Heatmaps** – Public sentiment visualized in real-time.  
+3. **Ontology-Based Entity Mapping** – Relationship tracking between **companies, politicians, and policies**.  
+4. **Bias Visualization & Misinformation Detection** – AI-driven context verification.  
+5. **Cryptographic Proofs & Audit Trails** – Ensuring data integrity and accountability.  
+6. **Public Petitions Integration** – Connecting reports to civic activism.  
+
+### **Tech Stack**  
+- **Frontend:** Rust (WASM)  
+- **Backend:** Python, Rust, PostgreSQL, Elastic for NLP-based data  
+- **Infrastructure:** Ansible, k3s cluster, OpenTelemetry for observability  
+- **AI & Data Processing:** NLP models for misinformation detection  
+- **Storage:** Parquet for raw data, encrypted logs for transparency  
+
+## **5. Monetization and Sustainability**  
+### **Funding Strategy**  
+1. **Donations & Crowdfunding** (Patreon, Open Collective) – To ensure neutrality.  
+2. **EU Grants & Public Sector Contracts** – Funding for open data research and tools.  
+3. **API Access Tiers** – Paid tiers for high-volume users
+4. **Public Endowment Fund** – Long-term financial stability.  
+
+## **6. Growth & Expansion Strategy**  
+1. **Phase 1 (2025-2026)** – Launch in Portugal, refine crowdsourced fact-checking system.  
+2. **Phase 2 (2027-2028)** – Expansion to France (align with 2027 elections), secure EU partnerships.  
+3. **Phase 3 (2029-2030)** – Expansion to Germany, integrate advanced AI & automation.  
+4. **Phase 4 (2030+)** – Scale to full EU-level adoption.
+
+## **7. Risks & Mitigation Strategies**  
+### **Legal & Regulatory Risks**  
+- **Defamation & Legal Liability** – Implement **strict moderation and verifiable sources**.  
+- **Data Privacy (GDPR Compliance)** – Ensure full **anonymization & transparency**.  
+
+### **Technical Risks**  
+- **Scalability Challenges** – Utilize **k3s, distributed storage, and optimized queries**.  
+- **Platform Manipulation & Bias Risks** – Implement **reputation-based weighting** for contributions.  
+
+### **Financial Risks**  
+- **Reliance on Donations** – Diversify revenue streams
+
+## **8. Conclusion & Next Steps**  
+This project has the potential to **redefine how political information is verified and consumed** in the European Union. With the right funding and technical execution, it can serve as a **guardian of truth**, empowering both citizens and policymakers with reliable, unbiased, and data-backed insights. The next step is to secure **initial funding** and begin development in **Portugal**, with a roadmap to **EU-wide expansion**.
+
+
+## **9. Technical Roadmap**
+### **Phase 1: Infrastructure & Core Setup (Weeks 1-4)**
+Goal: Establish a solid foundation with local k3s, CI/CD, observability, and data storage.
+
+#### **Tasks:**
+
+1. ~~**Cluster & Storage Setup**~~
+   - ~~Set up k3s across the three laptops using Ansible for configuration management.~~
+   - ~~Configure persistent storage (local filesystem for now, keeping NFS in mind for future scalability).~~
+   - ~~Ensure cluster nodes are properly joined and communicating.~~
+
+2. **CI/CD Pipeline**
+   - Deploy Gitea in k3s.
+   - Set up a basic CI/CD pipeline (e.g., GitHub Actions, ArgoCD).
+   - Test and validate deployments.
+
+3. **Observability & Monitoring**
+   - Deploy Prometheus and Grafana.
+   - Set up OpenTelemetry & Jaeger for distributed tracing.
+   - Configure logging (Loki or Elastic if needed).
+
+4. **Database & Metadata Layer**
+   - Deploy Postgres in k3s with proper persistence.
+   - Define schema for indexing dataset metadata.
+   - Implement first version of an API for dataset registration.
+
+---
+
+### **Phase 2: Crawlers & Data Ingestion (Weeks 5-8)**
+Goal: Build a robust data ingestion pipeline with traceability.
+
+#### **Tasks:**
+1. **Crawling Framework**
+   - Choose a crawling library (Scrapy, Selenium, or custom Rust-based solution).
+   - Implement a simple crawler for one government dataset.
+   - Store crawled data in Parquet (for structured) or Elastic (for NLP).
+
+2. **Metadata Traceability**
+   - Implement a system to link datasets with their sources.
+   - Design a versioning approach for datasets.
+   - Store metadata in Postgres.
+
+3. **Automation & Scheduling**
+   - Deploy a task scheduler (e.g., Airflow, Temporal, or k8s CronJobs).
+   - Automate periodic re-crawling of datasets.
+
+4. **Data Validation**
+   - Define rules to ensure data integrity.
+   - Implement a basic validation service.
+
+---
+
+### **Phase 3: Web Application MVP (Weeks 9-12)**
+Goal: Deliver a minimal but functional collaborative platform.
+
+#### **Tasks:**
+1. **Frontend Framework & UI**
+   - Set up a Rust + WASM frontend.
+   - Implement authentication & user management.
+
+2. **Dataset Search & Visualization**
+   - Create a frontend page to browse available datasets.
+   - Implement filtering and searching.
+   - Add basic data visualization (e.g., charts via D3.js or Recharts).
+
+3. **Discussion & Collaboration**
+   - Implement a basic discussion forum per dataset (Markdown-enabled).
+   - Allow users to tag and categorize discussions.
+   - Store discussions in Postgres.
+
+---
+
+### **Phase 4: Community & Moderation (Weeks 13-16)**
+Goal: Implement moderation tools and finalize the MVP.
+
+#### **Tasks:**
+1. **Contribution Workflow**
+   - Design a user-submitted dataset workflow.
+   - Implement dataset approval via community voting or moderation.
+   - Store user contributions separately from government data.
+
+2. **Moderation Tools**
+   - Implement Wikipedia-style revision history for discussions.
+   - Allow users to flag reports for review.
+   - Set up admin/moderator roles.
+
+3. **Refinements & Polish**
+   - Improve performance optimizations.
+   - Enhance UI/UX.
+   - Deploy final security measures (CORS, rate limiting, WAF).

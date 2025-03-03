@@ -1,0 +1,41 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Ensure base configuration is done"
+      include_role:
+        name: "cluster_node_base"
+    
+    - name: "Install fuse3 to make sure we can run k3s on docker with fuse-overlayfs"
+      community.general.pacman:
+        name: fuse3
+        state: present
+
+- name: Install k3s Server
+  hosts: k3s-control
+  tasks:
+    - name: "Configure and start k3s server control service"
+      include_role:
+        name: "k3s_control"
+      vars:
+        k3s_server_args: --snapshotter fuse-overlayfs
+
+- name: Install k3s Agents
+  hosts: k3s-agent
+  tasks:
+    - name: "Configure and start k3s agent service"
+      include_role:
+        name: "k3s_agent"
+      vars: 
+        k3s_agent_args: --snapshotter fuse-overlayfs
+
+- name: Validate k3s cluster
+  hosts: k3s-control
+  tasks:
+    - name: Wait for all nodes to be ready
+      shell: kubectl get nodes --no-headers | grep Ready | wc -l
+      register: ready_nodes
+      until: (ready_nodes.stdout | int) == ((groups['k3s-control'] | length) + (groups['k3s-agent'] | length))
+      retries: 30
+      delay: 10
+      changed_when: False

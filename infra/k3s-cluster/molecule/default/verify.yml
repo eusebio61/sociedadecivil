@@ -1,0 +1,30 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+
+  # Check required packages
+  - stat:
+      path: /usr/local/bin/k3s
+    register: k3s_bin
+
+  - name: Assert k3s binary file exists
+    assert:
+      that: k3s_bin.stat.exists
+      msg: "K3s is installed after playbook runs"
+
+- name: Validate k3s cluster
+  hosts: k3s-control
+  tasks:
+
+    - name: Retrieve the list of ready nodes
+      shell: kubectl get nodes --no-headers | grep Ready | wc -l
+      register: ready_nodes
+    
+    - name: Assert the number of nodes in the cluster
+      assert: 
+        that: (ready_nodes.stdout | int) == ((groups['k3s-control'] | length) + (groups['k3s-agent'] | length))
+        msg: "The cluster should be composed by the server and an agent node"

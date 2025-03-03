@@ -1,6 +1,7 @@
 galaxy_info:
   author: Eusebio
   namespace: sociedadecivil
+  role_name: k3s_control
   description: Configure and start a k3s server
   company: sociedadecivil
   min_ansible_version: 2.1

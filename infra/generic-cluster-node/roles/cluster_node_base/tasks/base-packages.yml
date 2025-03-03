@@ -8,3 +8,9 @@
   community.general.pacman:
     name: docker
     state: present
+
+- name: Ensure docker service is running and enabled
+  systemd:
+    name: docker
+    state: started
+    enabled: yes

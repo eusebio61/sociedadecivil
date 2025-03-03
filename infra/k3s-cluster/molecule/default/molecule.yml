@@ -1,0 +1,44 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+  options:
+    managed: true
+
+platforms:
+  - name: k3s-control-1
+    groups:
+      - k3s-control
+    image: docker.sociedadecivil.local/ansible/molecule/archlinux:base
+    pre_build_image: true
+    command: /sbin/init
+    tmpfs:
+      - /run
+      - /tmp
+    privileged: True
+    networks:
+      - name: molecule_network
+
+  - name: k3s-agent-1
+    groups:
+      - k3s-agent
+    image: docker.sociedadecivil.local/ansible/molecule/archlinux:base
+    pre_build_image: true
+    command: /sbin/init
+    tmpfs:
+      - /run
+      - /tmp
+    privileged: True
+    networks:
+      - name: molecule_network
+
+provisioner:
+  name: ansible
+  env:
+    ANSIBLE_ROLES_PATH: ../../../generic-cluster-node/roles:../../../k3s-cluster/roles
+  lint:
+    name: ansible-lint
+
+verifier:
+  name: ansible

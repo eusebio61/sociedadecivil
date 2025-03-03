@@ -1,0 +1,21 @@
+---
+
+- name: Ensure dependencies are installed
+  community.general.pacman:
+    name: ["curl", "iptables", "socat"]
+    state: present
+
+# Agent installation
+- name: Ensure k3s agent joins the cluster
+  shell: |
+    curl -sfL https://get.k3s.io | K3S_URL="https://{{ groups['k3s-control'][0] }}:6443" K3S_TOKEN="{{ hostvars[groups['k3s-control'][0]]['k3s_token'] }}" sh -s - {{ k3s_agent_args }}
+  args:
+    creates: /usr/local/bin/k3s
+  become: true
+
+- name: Ensure k3s-agent service is running
+  systemd:
+    name: k3s-agent
+    state: started
+    enabled: yes
+
