@@ -1,0 +1,87 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev-tools
+
+---
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: gitea
+  namespace: dev-tools
+spec:
+  targetNamespace: dev-tools
+  createNamespace: true
+  repo: https://dl.gitea.com/charts/
+  chart: gitea
+  valuesContent: |-
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 512Mi
+      requests:
+        cpu: 100m
+        memory: 512Mi
+
+    gitea:
+      config:
+        APP_NAME: "Civil Society: With a cup of tea."
+        repository:
+          ROOT: "~/gitea-repositories"
+        repository.pull-request:
+          WORK_IN_PROGRESS_PREFIXES: "WIP:,[WIP]:"
+
+      metrics:
+        enabled: true
+        serviceMonitor:
+          enabled: true
+
+    persistence:
+      enabled: true
+      storageClass: local-path
+
+    ingress:
+      enabled: true
+      hosts:
+      - host: contribute.sociedade-civil
+        paths:
+        - path: /
+          pathType: Prefix
+
+    nodeSelector: 
+      kubernetes.io/hostname: cluster-node-1
+
+    actions:
+      enabled: true
+      statefulset:
+        nodeSelector:
+          kubernetes.io/hostname: cluster-node-1
+      provisioning:
+        enabled: true
+        nodeSelector:
+          kubernetes.io/hostname: cluster-node-1
+
+    redis-cluster:
+      enabled: false
+
+    redis:
+      enabled: true
+      master:
+        affinity: {}
+        podAntiAffinityPreset: soft
+        nodeSelector:
+          kubernetes.io/hostname: cluster-node-1
+
+    postgresql-ha:
+      enabled: false
+
+    postgresql:
+      enabled: true
+      primary:
+        affinity: {}
+        podAntiAffinityPreset: soft
+        nodeSelector:
+          kubernetes.io/hostname: cluster-node-1
+      persistence:
+        enabled: true
+        storageClass: local-path
