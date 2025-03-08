@@ -7,7 +7,7 @@ class TraceLevels(Enum):
     DEBUG = 4
 
 
-platform_name = 'eusebio'
+platform_name = 'lucivile'
 
 trace_level = TraceLevels.DEBUG.value
 

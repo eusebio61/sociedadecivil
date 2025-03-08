@@ -1,0 +1,14 @@
+
+
+#curl -s -c cookies.txt -XGET 'https://www.base.gov.pt/Base4/pt/pesquisa/' \
+#    -H 'User-Agent: Mozilla/5.0 (eusebio)' \
+#    -o /dev/null
+
+curl -s -XPOST https://www.base.gov.pt/Base4/pt/resultados/ \
+    -H 'User-Agent: Mozilla/5.0 (eusebio)' \
+    -d 'type=search_contratos&version=134.0&sort=-publicationDate&page=0&size=2'
+
+
+curl -s -XPOST https://www.base.gov.pt/Base4/pt/resultados/ \
+    -H 'User-Agent: Mozilla/5.0 (eusebio)' \
+    -d 'type=detail_contratos&version=134.0&id=11215707'
